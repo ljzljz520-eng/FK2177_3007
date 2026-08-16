@@ -232,10 +232,10 @@ func Load(r io.Reader) (*ActivityList, error) {
 			return nil, fmt.Errorf("decode archive: %w", err)
 		}
 	}
-	list := &ActivityList{}
-	if len(saved.Activities) > 0 {
-		list.index = make(map[string]*ActivityNode, len(saved.Activities))
-	}
+	// Always initialize the index map, even for an empty archive. A nil map
+	// would panic on the first Append (assignment to entry in nil map) once a
+	// valid empty archive has been loaded.
+	list := &ActivityList{index: make(map[string]*ActivityNode, len(saved.Activities))}
 	for _, activity := range saved.Activities {
 		if err := list.Append(activity); err != nil {
 			return nil, fmt.Errorf("load activity %s: %w", activity.ID, err)
