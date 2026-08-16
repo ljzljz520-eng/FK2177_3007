@@ -232,7 +232,7 @@ func Load(r io.Reader) (*ActivityList, error) {
 			return nil, fmt.Errorf("decode archive: %w", err)
 		}
 	}
-	list := &ActivityList{}
+	list := NewList()
 	if len(saved.Activities) > 0 {
 		list.index = make(map[string]*ActivityNode, len(saved.Activities))
 	}
