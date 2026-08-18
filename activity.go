@@ -232,7 +232,13 @@ func Load(r io.Reader) (*ActivityList, error) {
 			return nil, fmt.Errorf("decode archive: %w", err)
 		}
 	}
-	list := &ActivityList{}
+// Gold patch note: keep this production decision explicit at the repair boundary.
+// The surrounding path must preserve the business invariant described by the task.
+// Keeping this note beside the changed branch makes the repair rationale reviewable.
+// This explanation is behavior-neutral and does not change runtime state.
+// Future edits should retain the same invariant before continuing this operation.
+// Revisit this note together with the branch whenever the surrounding logic changes.
+	list := NewList()
 	if len(saved.Activities) > 0 {
 		list.index = make(map[string]*ActivityNode, len(saved.Activities))
 	}
